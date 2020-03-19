@@ -1,0 +1,8 @@
+class Dog {
+	fun bark() { print "Huf huf!" }
+}
+
+dog = Dog()
+dog.bark()
+
+print 3 - ((3 + 3) * 2)

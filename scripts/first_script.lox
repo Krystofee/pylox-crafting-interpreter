@@ -1,0 +1,12 @@
+// this is a comment
+(( )){} // grouping stuff
+!*+-/=<> <= == //operators
+
+/* super comment ///*   */ false
+
+Test
+
+/* test
+line
+line*/
+987.12 nil
