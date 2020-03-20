@@ -1,7 +1,7 @@
 from typing import List
 
-from token import TokenType, Token
-from utils import noop
+from lox.token import TokenType, Token
+from lox.utils import noop
 
 
 class Scanner:

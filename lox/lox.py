@@ -1,6 +1,6 @@
 import sys
 
-from scanner import Scanner
+from lox.scanner import Scanner
 
 
 class Lox:
@@ -45,8 +45,3 @@ class Lox:
     def report(line: int, where: str, message: str):
         Lox.has_error = True
         print(f'[line {line}] Error{where}: {message}')
-
-
-if __name__ == '__main__':
-    lox = Lox()
-    lox.run()
