@@ -13,9 +13,11 @@ class TokenType(Enum):
   DOT = 'DOT'
   MINUS = 'MINUS'
   PLUS = 'PLUS'
+  COLON = 'COLON'
   SEMICOLON = 'SEMICOLON'
   SLASH = 'SLASH'
   STAR = 'STAR'
+  QUESTION = 'QUESTION'
 
   # One or two character tokens.
   BANG = 'BANG'

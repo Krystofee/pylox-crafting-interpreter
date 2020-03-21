@@ -1,5 +1,6 @@
 class_declaration = [
     "Binary   - left: BaseExpr, operator: Token, right: BaseExpr",
+    "Ternary  - condition: BaseExpr, left: BaseExpr, right: BaseExpr",
     "Grouping - expression: BaseExpr",
     "Literal  - value: object",
     "Unary    - operator: Token, right: BaseExpr"

@@ -58,6 +58,8 @@ class Scanner:
         elif c == '+': self.add_token(TokenType.PLUS)
         elif c == ';': self.add_token(TokenType.SEMICOLON)
         elif c == '*': self.add_token(TokenType.STAR)
+        elif c == '?': self.add_token(TokenType.QUESTION)
+        elif c == ':': self.add_token(TokenType.COLON)
         elif c == '!': self.add_token(TokenType.BANG_EQUAL) if self.match('=') else self.add_token(TokenType.BANG)
         elif c == '=': self.add_token(TokenType.EQUAL_EQUAL) if self.match('=') else self.add_token(TokenType.EQUAL)
         elif c == '<': self.add_token(TokenType.LESS_EQUAL) if self.match('=') else self.add_token(TokenType.LESS)

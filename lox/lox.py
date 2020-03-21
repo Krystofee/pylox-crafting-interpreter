@@ -1,29 +1,32 @@
 import sys
 
 from lox.ast_printer import AstPrinter
+from lox.interpreter import Interpreter
 from lox.parser import Parser
+from lox.runtime_error import LoxRuntimeError
 from lox.scanner import Scanner
 from lox.token import Token, TokenType
 
 
 class Lox:
     has_error = False
+    has_runtime_error = False
+
+    def __init__(self):
+        self.interpreter = Interpreter(report_error=self.runtime_error)
 
     def run_code(self, source_code):
         scanner = Scanner(source_code, self.error)
         tokens = scanner.scan_tokens()
 
-        print(list(map(str, tokens)))
-
         parser = Parser(tokens, self.error_token)
         expr = parser.parse()
 
         if Lox.has_error:
-            print('has error')
             return
 
-        print(expr)
-        print(AstPrinter().print(expr))
+        # print(AstPrinter().print(expr))
+        Interpreter().interpret(expr)
 
     def run_file(self, path):
         with open(path, 'r') as file:
@@ -34,11 +37,14 @@ class Lox:
 
         if self.has_error:
             exit(65)
+        if self.has_runtime_error:
+            exit(70)
 
     def run_prompt(self, ):
         while True:
             self.run_code(input('>'))
-            self.has_error = False
+            Lox.has_error = False
+            Lox.has_runtime_error = False
 
     def run(self):
         if len(sys.argv) > 2:
@@ -56,11 +62,16 @@ class Lox:
     @staticmethod
     def error_token(token: Token, message: str):
         if token.type == TokenType.EOF:
-            Lox.report(token.line, ' at end', message)
+            Lox.report(token.line, 'at end', message)
         else:
             Lox.report(token.line, f'at "{token.lexeme}"', message)
 
     @staticmethod
     def report(line: int, where: str, message: str):
-        print(f'[line {line}] Error{where}: {message}')
         Lox.has_error = True
+        print(f'[line {line}] Error {where}: {message}')
+
+    @staticmethod
+    def runtime_error(error: LoxRuntimeError):
+        Lox.has_runtime_error = True
+        print(f'{error.message}\n[line {error.token.line}]')

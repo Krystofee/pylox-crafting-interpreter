@@ -18,6 +18,9 @@ class AstPrinter(ExprVisitor):
     def visit_binary(self, expr: 'Expr.Binary'):
         return self.parenthesize(expr.operator.lexeme, expr.left, expr.right)
 
+    def visit_ternary(self, expr: 'Expr.Ternary'):
+        return self.parenthesize('?', expr.condition, expr.left, expr.right)
+
     def parenthesize(self, name, *exprs):
         return f'({name} {" ".join([str(x.accept(self)) for x in exprs])})'
 

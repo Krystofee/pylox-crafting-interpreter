@@ -24,7 +24,29 @@ class Parser:
             return
 
     def expression(self) -> BaseExpr:
-        return self.equality()
+        return self.comma()
+
+    def comma(self) -> BaseExpr:
+        expr = self.ternary()
+        while self.match(TokenType.COMMA):
+            operator = self.previous()
+            expr = Expr.Binary(expr, operator, self.expression())
+        return expr
+
+    def ternary(self):
+        expr = self.equality()
+
+        if self.peek().type == TokenType.QUESTION:
+            self.advance()
+            left = self.expression()
+            if self.match(TokenType.COLON):
+                right = self.expression()
+                return Expr.Ternary(expr, left, right)
+
+            raise self.error(self.peek(), 'Unterminated ternary operator. Expected colon.')
+
+        return expr
+
 
     def equality(self) -> BaseExpr:
         expr = self.comparison()

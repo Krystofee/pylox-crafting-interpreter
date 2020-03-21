@@ -15,6 +15,15 @@ class Expr(BaseExpr):
         def accept(self, visitor: 'ExprVisitor'):
             return visitor.visit_binary(self)
 
+    class Ternary(BaseExpr):
+        def __init__(self, condition: BaseExpr, left: BaseExpr, right: BaseExpr):
+            self.condition = condition
+            self. left =  left
+            self. right =  right
+            
+        def accept(self, visitor: 'ExprVisitor'):
+            return visitor.visit_ternary(self)
+
     class Grouping(BaseExpr):
         def __init__(self, expression: BaseExpr):
             self.expression = expression
@@ -40,6 +49,9 @@ class Expr(BaseExpr):
 
 class ExprVisitor:    
     def visit_binary(self, expr: 'Expr.Binary'):
+        raise NotImplementedError()
+            
+    def visit_ternary(self, expr: 'Expr.Ternary'):
         raise NotImplementedError()
             
     def visit_grouping(self, expr: 'Expr.Grouping'):
