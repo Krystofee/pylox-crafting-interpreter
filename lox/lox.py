@@ -1,6 +1,5 @@
 import sys
 
-from lox.ast_printer import AstPrinter
 from lox.interpreter import Interpreter
 from lox.parser import Parser
 from lox.runtime_error import LoxRuntimeError
@@ -26,7 +25,7 @@ class Lox:
             return
 
         # print(AstPrinter().print(expr))
-        Interpreter().interpret(expr)
+        self.interpreter.interpret(expr)
 
     def run_file(self, path):
         with open(path, 'r') as file:
@@ -67,11 +66,11 @@ class Lox:
             Lox.report(token.line, f'at "{token.lexeme}"', message)
 
     @staticmethod
+    def runtime_error(error: LoxRuntimeError):
+        Lox.has_runtime_error = True
+        print(f'[line {error.token.line}] {error.message}')
+
+    @staticmethod
     def report(line: int, where: str, message: str):
         Lox.has_error = True
         print(f'[line {line}] Error {where}: {message}')
-
-    @staticmethod
-    def runtime_error(error: LoxRuntimeError):
-        Lox.has_runtime_error = True
-        print(f'{error.message}\n[line {error.token.line}]')

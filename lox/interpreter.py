@@ -1,12 +1,12 @@
-from lox.expr import ExprVisitor, Expr, BaseExpr
+from lox.expr import BaseExpr, Expr, ExprVisitor
 from lox.runtime_error import LoxRuntimeError
-from lox.token import TokenType, Token
+from lox.token import Token, TokenType
 from lox.utils import noop
 
 
 class Interpreter(ExprVisitor):
     def __init__(self, report_error=noop):
-        self.report_error= report_error
+        self.report_error = report_error
 
     def interpret(self, expr: 'BaseExpr'):
         try:
@@ -36,10 +36,10 @@ class Interpreter(ExprVisitor):
             return left >= right
         if expr.operator.type == TokenType.PLUS:
             if isinstance(left, float) and isinstance(right, float):
-                self.check_numbers(expr.operator, left, right)
                 return left + right
+            if isinstance(left, str) and isinstance(right, float):
+                return left + self.stringify(right)
             if isinstance(left, str) and isinstance(right, str):
-                self.check_numbers(expr.operator, left, right)
                 return left + right
 
             raise LoxRuntimeError(expr.operator, f"Cannot perform + on: {type(left)} + {type(right)}")
@@ -51,6 +51,10 @@ class Interpreter(ExprVisitor):
             return left * right
         if expr.operator.type == TokenType.SLASH:
             self.check_numbers(expr.operator, left, right)
+
+            if right == 0:
+                raise RuntimeError(expr.operator, "Zero division not permitted.")
+
             return left / right
 
     def visit_ternary(self, expr: 'Expr.Ternary'):
@@ -86,7 +90,7 @@ class Interpreter(ExprVisitor):
         raise LoxRuntimeError(operator, 'An operand must be a number.')
 
     def check_numbers(self, operator: Token, a, b):
-        if not self.check_number(operator, a) or self.check_number(operator, b):
+        if not isinstance(a, float) and isinstance(b, float):
             return
 
         raise LoxRuntimeError(operator, 'Operands must be numbers.')
