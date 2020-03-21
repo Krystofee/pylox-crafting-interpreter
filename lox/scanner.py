@@ -5,7 +5,7 @@ from lox.utils import noop
 
 
 class Scanner:
-    tokens: List[TokenType]
+    tokens: List[Token]
 
     start = 0
     current = 0
@@ -34,7 +34,7 @@ class Scanner:
             'while': TokenType.WHILE,
         }
 
-    def scan_tokens(self) -> List[TokenType]:
+    def scan_tokens(self) -> List[Token]:
         while not self.at_the_end:
             self.start = self.current
             self.scan_token()

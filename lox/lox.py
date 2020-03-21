@@ -1,6 +1,9 @@
 import sys
 
+from lox.ast_printer import AstPrinter
+from lox.parser import Parser
 from lox.scanner import Scanner
+from lox.token import Token, TokenType
 
 
 class Lox:
@@ -10,8 +13,17 @@ class Lox:
         scanner = Scanner(source_code, self.error)
         tokens = scanner.scan_tokens()
 
-        for token in tokens:
-            print(token)
+        print(list(map(str, tokens)))
+
+        parser = Parser(tokens, self.error_token)
+        expr = parser.parse()
+
+        if Lox.has_error:
+            print('has error')
+            return
+
+        print(expr)
+        print(AstPrinter().print(expr))
 
     def run_file(self, path):
         with open(path, 'r') as file:
@@ -42,6 +54,13 @@ class Lox:
         Lox.report(line, "", message)
 
     @staticmethod
+    def error_token(token: Token, message: str):
+        if token.type == TokenType.EOF:
+            Lox.report(token.line, ' at end', message)
+        else:
+            Lox.report(token.line, f'at "{token.lexeme}"', message)
+
+    @staticmethod
     def report(line: int, where: str, message: str):
-        Lox.has_error = True
         print(f'[line {line}] Error{where}: {message}')
+        Lox.has_error = True
